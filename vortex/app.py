@@ -29,11 +29,3 @@ def link_history_handler():
     else:
         attachments = REDDIT[channel].attachments
     return jsonify(dict(text=status_msg, attachments=attachments))
-
-
-def mirror_links():
-    """
-    mirrors links from slack to reddit.
-    this entrypoint is scheduled by lambda
-    """
-    REDDIT.mirror_recent_attachments()
