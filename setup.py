@@ -6,7 +6,9 @@ from setuptools import setup, find_packages
 requirements = [
     # redditdb...
     # loggable...
-    'flask', 'memoized_property',
+    'flask',
+    'slackclient',
+    'memoized_property',
 ]
 
 PACKAGE_NAME = 'vortex'

@@ -1,2 +1,4 @@
 .env
 zappa_settings.yml
+*.pyc
+*.egg-info/

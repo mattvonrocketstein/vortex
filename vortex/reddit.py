@@ -1,8 +1,12 @@
 """ vortex.reddit
 """
+from memoized_property import memoized_property
+
+from vortex.logger import Loggable
+from redditdb import RedditDB
 
 
-class Reddit(RedditBase):
+class Reddit(RedditDB):
     def __init__(self, **kargs):
         super(Reddit, self).__init__(**kargs)
         # prime the cache just so logging isn't weird
@@ -66,7 +70,7 @@ class Reddit(RedditBase):
         msg = 'loading (or creating) top-level reddit sticky-post structures'
         self.debug(msg)
         result = {}
-        for submission_obj in self.toplevel:
+        for submission_obj in self:
             title = self.normalize_channel_name(submission_obj.title)
             if title in SLACK.cbn:
                 result[title] = submission_obj

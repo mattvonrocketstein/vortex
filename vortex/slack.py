@@ -1,5 +1,8 @@
 """ vortex.slack
 """
+from memoized_property import memoized_property
+
+from vortex.logger import Loggable
 
 
 class SlackBase(Loggable):

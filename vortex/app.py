@@ -1,9 +1,10 @@
 """ vortex.app
 """
 from flask import Flask
-
+from vortex.logger import LOGGER
+from vortex.slack import Slack
+from vortex.reddit import Reddit
 APP = app = Flask(__name__)
-LOGGER = get_logger('app')
 SLACK = Slack()
 REDDIT = Reddit()
 

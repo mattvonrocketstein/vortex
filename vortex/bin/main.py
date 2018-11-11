@@ -1,13 +1,18 @@
+# -*- coding: utf-8 -*-
 """ vortex.bin.main
 """
 
 import click
-from .app import APP
+from vortex.app import APP
+from vortex.logger import LOGGER
 
 
-def entry():
-    """
-    We only need this for local development,
-    the lambda deployments specify their own entry points
-    """
-    APP.run(debug=True)
+@click.group(invoke_without_command=True)
+@click.option('--serve', help='run slash-command server', default=False, is_flag=True)
+# @click.argument('keyname', nargs=1)
+# @click.argument('command', nargs=-1)
+@click.pass_context
+def entry(ctx, serve):
+    # ctx.obj = dict(dry_run=dry_run)
+    if serve:
+        APP.run(debug=True)
