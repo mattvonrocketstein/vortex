@@ -1,14 +1,18 @@
 """ vortex.reddit
+    Vortex-specific Reddit interface.  This converts the default RedditDB
+    object into something more suitable for our slack-link-mirroring use case
 """
 from memoized_property import memoized_property
 
 from vortex.logger import Loggable
 from redditdb import RedditDB
+from vortex.slack import Slack
 
 
 class Reddit(RedditDB):
     def __init__(self, **kargs):
         super(Reddit, self).__init__(**kargs)
+        self.slack = Slack()
         # prime the cache just so logging isn't weird
         self.channels
 
@@ -22,13 +26,13 @@ class Reddit(RedditDB):
         to synchronize each one to subreddit. sync is NOOP
         if link is already present.
         """
-        for chan_id, slack_attachments in SLACK.get_link_history().items():
+        for chan_id, slack_attachments in self.slack.get_link_history().items():
             if target_chan_id and chan_id != target_chan_id:
                 continue
-            chan_name = SLACK.cbi[chan_id]
+            chan_name = self.slack.cbi[chan_id]
             msg = 'synchronizing links from: {}'.format(chan_name)
             self.debug(msg, divider=True)
-            SLACK['robots'].send(msg=msg)
+            self.slack['robots'].send(msg=msg)
             for attachment in slack_attachments:
                 self.sync_attachment(chan_name, attachment)
 
@@ -71,10 +75,12 @@ class Reddit(RedditDB):
         self.debug(msg)
         result = {}
         for submission_obj in self:
-            title = self.normalize_channel_name(submission_obj.title)
-            if title in SLACK.cbn:
+            # import IPython; IPython.embed()
+            # title = self.normalize_channel_name(submission_obj.title)
+            title = self.normalize_channel_name(submission_obj.name)
+            if title in self.slack.cbn:
                 result[title] = submission_obj
-        for name in sorted(SLACK.cbn.keys()):
+        for name in sorted(self.slack.cbn.keys()):
             if name not in result:
                 result[name] = self.create_channel(name)
             else:

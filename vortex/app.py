@@ -1,9 +1,12 @@
 """ vortex.app
+    Flask app, i.e. the slack slash-command handlers
 """
-from flask import Flask
+
+from flask import Flask, request, send_file
 from vortex.logger import LOGGER
 from vortex.slack import Slack
 from vortex.reddit import Reddit
+
 APP = app = Flask(__name__)
 SLACK = Slack()
 REDDIT = Reddit()

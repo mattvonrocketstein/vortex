@@ -2,3 +2,4 @@
 zappa_settings.yml
 *.pyc
 *.egg-info/
+.tox/

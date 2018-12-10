@@ -1,27 +1,14 @@
 """ vortex.slack
+    Customization of the slack client for vortex-specific usage
 """
+import os
 from memoized_property import memoized_property
 
+from slacks import slacks
 from vortex.logger import Loggable
 
 
-class SlackBase(Loggable):
-
-    def __init__(self, *args, **kargs):
-        super(SlackBase, self).__init__(*args, **kargs)
-
-    @memoized_property
-    def bot_client(self):
-        self.debug('getting slack client')
-        return SlackClient(os.environ['SLACK_BOT_TOKEN'])
-
-    @memoized_property
-    def user_client(self):
-        self.debug('getting slack client')
-        return SlackClient(os.environ['SLACK_USER_TOKEN'])
-
-
-class SlackChannel(SlackBase):
+class SlackChannel(slacks):
 
     def __init__(self, name=None, id=None, slack=None, **kargs):
         super(SlackChannel, self).__init__(**kargs)
@@ -52,7 +39,7 @@ class SlackChannel(SlackBase):
         return out
 
 
-class Slack(SlackBase):
+class Slack(slacks):
     """
     Handle on Slack.  This behaves like a dictionary where both
     SLACK[chan_name] and SLACK[chan_id] return a SlackChannel object

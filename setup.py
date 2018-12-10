@@ -3,15 +3,18 @@
 
 from setuptools import setup, find_packages
 
-requirements = [
-    # redditdb...
-    # loggable...
-    'flask',
-    'slackclient',
-    'memoized_property',
-]
-
 PACKAGE_NAME = 'vortex'
+REQUIREMENTS = [
+    'flask',
+    'memoized_property',
+    'python-dotenv',
+    'redditdb==0.1.0',
+    'slacks==0.1.0',
+]
+GITHUB_REQUIREMENTS = [
+    'https://github.com/mattvonrocketstein/redditdb/archive/master.zip#egg=redditdb-0.1.0',
+    'https://github.com/mattvonrocketstein/python-slacks/archive/master.zip#egg=slacks-0.1.0',
+]
 setup(
     name=PACKAGE_NAME,
     version='0.1.0',
@@ -20,7 +23,8 @@ setup(
     author_email='no-reply@example.com',
     url='https://github.com/mattvonrocketstein/vortex',
     packages=find_packages(),
-    install_requires=requirements,
+    install_requires=REQUIREMENTS,
+    dependency_links=GITHUB_REQUIREMENTS,
     zip_safe=False,
     entry_points={
         'console_scripts':

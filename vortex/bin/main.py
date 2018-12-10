@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """ vortex.bin.main
-
-A command-line-interface that demos/exercises most of the features available
+    A command-line-interface that demos/exercises most of the features available
 """
 
 import click
@@ -14,11 +13,12 @@ from vortex.logger import LOGGER
 @click.option('--topic', help='set reddit topic name', default='general')
 @click.option('--channel', help='set slack channel name', default='general')
 @click.option('--describe-topics', help='describe all topics in reddit', default=False, is_flag=True)
-@click.option('--describe-channels', help='set slack channel name', default='general')
-@click.option('--describe-links', help='describe links in slack channel (used with --channel)', default='general')
+@click.option('--dump-topic', help='dump contents of reddit topic', default=False, is_flag=True)
+@click.option('--describe-channels', help='describe all channels in slack', default=False, is_flag=True)
+@click.option('--describe-links', help='describe links in slack channel (used with --channel)', default=False, is_flag=True)
 @click.option('--search', help='search links under given topic (used with --topic)')
 @click.pass_context
-def entry(ctx, serve, mirror, topic, channel, describe_topics, describe_links, describe_channels, search, ):
+def entry(ctx, serve, mirror, topic, channel, dump_topic, describe_topics, describe_links, describe_channels, search, ):
     if serve:
         LOGGER.debug("dispatching for serve")
         from vortex.app import APP
@@ -29,8 +29,8 @@ def entry(ctx, serve, mirror, topic, channel, describe_topics, describe_links, d
         result = mirror_links()
     elif describe_channels:
         LOGGER.debug("dispatching for describe-channels")
-        from vortex.slack import Slack
-        result = Slack().channels
+        from slacks import slacks
+        result = slacks().channels
     elif describe_links:
         err = '--channel must be provided with --describe-links'
         assert channel, err
@@ -39,8 +39,16 @@ def entry(ctx, serve, mirror, topic, channel, describe_topics, describe_links, d
         result = Slack()[channel].links
     elif describe_topics:
         LOGGER.debug("dispatching for describe-topics")
-        from vortex.reddit import Reddit
-        result = Reddit().topics
+        from redditdb import RedditDB
+        result = [x for x in RedditDB()]
+    elif dump_topic:
+        err = '--topic must be provided with --dump-topic'
+        assert topic, err
+        LOGGER.debug("dispatching for dump-topic")
+        from redditdb import RedditDB
+        topic = RedditDB()[topic]
+        LOGGER.debug("got topic: {}".format(topic))
+        result = [x for x in topic]
     elif search:
         err = '--topic must be provided with --search'
         assert topic, err

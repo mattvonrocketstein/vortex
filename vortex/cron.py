@@ -1,4 +1,5 @@
 """ vortex.cron
+    Entrypoints for scheduled lambda
 """
 from vortex.reddit import Reddit
 

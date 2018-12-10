@@ -29,6 +29,11 @@ Specifically, this experiment uses a subreddit as a persistent storage layer, ba
 1. Scheduled Execution invokes `vortex.mirror_links` function.  See also the [aws docs for building cron expressions]( https://docs.aws.amazon.com/systems-manager/latest/userguide/reference-cron-and-rate-expressions.html
 ) to change the schedule.  See the [Usage section](#usage) for manual invocation of the scheduled tasks.
 
+## Installation
+
+```pip install --process-dependency-links -e git://github.com/mattvonrocketstein/vortex.git@master#egg=vortex```
+
+
 ## Prerequisites
 
 #### Reddit User
@@ -88,4 +93,8 @@ Placeholder
 
 ## Related Work
 
-Placeholder
+This demo builds on other repos:
+
+* https://github.com/mattvonrocketstein/python-loggable
+* https://github.com/mattvonrocketstein/python-redditdb
+* https://github.com/mattvonrocketstein/python-slacks
