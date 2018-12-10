@@ -2,10 +2,9 @@
     Customization of the slack client for vortex-specific usage
 """
 import os
+from pprint import pprint
 from memoized_property import memoized_property
-
 from slacks import slacks
-from vortex.logger import Loggable
 
 
 class SlackChannel(slacks):
@@ -15,6 +14,16 @@ class SlackChannel(slacks):
         self.slack = None
         self.name = name
         self.id = id
+
+    def __repr__(self):
+        return '<SlackChannel: name={} id={}>'.format(self.name, self.id)
+
+    __str__ = __repr__
+
+    @memoized_property
+    def links(self):
+        result = self.get_link_history()
+        return [x.get('original_url') for x in result]
 
     def send(self, chan_id=None, msg="default message", attachments=[]):
         """ """
@@ -64,11 +73,13 @@ class Slack(slacks):
 
     @memoized_property
     def cbn(self):
+        """ channels by name mapping """
         return dict([[c['name'], c['id']]
                      for c in self._CHANNELS if c['name'] in self.channel_whitelist])
 
     @memoized_property
     def cbi(self):
+        """ channels by id mapping """
         return dict([[c['id'], c['name']]
                      for c in self._CHANNELS if c['name'] in self.channel_whitelist])
 

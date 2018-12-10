@@ -3,6 +3,7 @@
     A command-line-interface that demos/exercises most of the features available
 """
 
+from pprint import pprint
 import click
 from vortex.logger import LOGGER
 
@@ -36,7 +37,8 @@ def entry(ctx, serve, mirror, topic, channel, dump_topic, describe_topics, descr
         assert channel, err
         LOGGER.debug("dispatching for describe-links")
         from vortex.slack import Slack
-        result = Slack()[channel].links
+        result = Slack()[channel]
+        result = result.links
     elif describe_topics:
         LOGGER.debug("dispatching for describe-topics")
         from redditdb import RedditDB
@@ -54,6 +56,6 @@ def entry(ctx, serve, mirror, topic, channel, dump_topic, describe_topics, descr
         assert topic, err
         LOGGER.debug("dispatching for search")
         from vortex.reddit import Reddit
-        result = Reddit()[topic_name].search(search)
-    print result
+        result = Reddit()[topic].search(search)
+    pprint(result)
     return result

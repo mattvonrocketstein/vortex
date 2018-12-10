@@ -2,9 +2,9 @@
     Vortex-specific Reddit interface.  This converts the default RedditDB
     object into something more suitable for our slack-link-mirroring use case
 """
+import json
 from memoized_property import memoized_property
 
-from vortex.logger import Loggable
 from redditdb import RedditDB
 from vortex.slack import Slack
 
@@ -18,7 +18,7 @@ class Reddit(RedditDB):
 
     def __getitem__(self, submission_name):
         result = self.channels[self.normalize_channel_name(submission_name)]
-        return ChannelMirror(result)
+        return result
 
     def mirror_recent_attachments(self, target_chan_id=None):
         """
@@ -75,8 +75,6 @@ class Reddit(RedditDB):
         self.debug(msg)
         result = {}
         for submission_obj in self:
-            # import IPython; IPython.embed()
-            # title = self.normalize_channel_name(submission_obj.title)
             title = self.normalize_channel_name(submission_obj.name)
             if title in self.slack.cbn:
                 result[title] = submission_obj
